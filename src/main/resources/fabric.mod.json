@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "cinecraft",
+  "version": "${version}",
+  "name": "CineCraft",
+  "description": "A cinematic camera system for Minecraft.",
+  "authors": ["CineCraft Team"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "com.cinecraft.CineCraft"
+    ],
+    "client": [
+      "com.cinecraft.client.CineCraftClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}
