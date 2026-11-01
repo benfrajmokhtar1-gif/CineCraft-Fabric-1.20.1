@@ -1,51 +1,73 @@
 package com.cinecraft.client;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
 public class CineCraftHud {
 
+    private static int displayTime = 0;
+    private static boolean wasEnabled = false;
+    private static CineCraftClient.CameraMode lastMode = null;
+
     public static void register() {
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+
+            boolean enabled = CineCraftClient.isCameraEnabled();
+            CineCraftClient.CameraMode mode =
+                    CineCraftClient.getCurrentMode();
+
+            if (enabled && (!wasEnabled || mode != lastMode)) {
+                displayTime = 80;
+            }
+
+            if (!enabled) {
+                displayTime = 0;
+            } else if (displayTime > 0) {
+                displayTime--;
+            }
+
+            wasEnabled = enabled;
+            lastMode = mode;
+        });
 
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
 
-            if (!CineCraftClient.isCameraEnabled()) {
+            if (!CineCraftClient.isCameraEnabled()
+                    || displayTime <= 0) {
                 return;
             }
 
             MinecraftClient client = MinecraftClient.getInstance();
 
-            int x = 12;
-            int y = 12;
+            int x = 10;
+            int y = 10;
 
-            drawContext.fill(x, y, x + 155, y + 65, 0xCC101010);
+            drawContext.fill(
+                    x, y, x + 132, y + 36,
+                    0x990B0B0F
+            );
 
-            drawContext.fill(x, y, x + 3, y + 65, 0xFFFF3030);
-
-            drawContext.drawTextWithShadow(
-                client.textRenderer,
-                Text.literal("CINECRAFT"),
-                x + 10, y + 7, 0xFFFF4040
+            drawContext.fill(
+                    x, y, x + 2, y + 36,
+                    0xFFFF3030
             );
 
             drawContext.drawTextWithShadow(
-                client.textRenderer,
-                Text.literal("CAMERA: ON"),
-                x + 10, y + 23, 0xFFFFFFFF
+                    client.textRenderer,
+                    Text.literal("CINECRAFT"),
+                    x + 9, y + 6,
+                    0xFFFF5555
             );
 
             drawContext.drawTextWithShadow(
-                client.textRenderer,
-                Text.literal("MODE: " + CineCraftClient.getCurrentMode().name()),
-                x + 10, y + 37, 0xFFFFD0D0
-            );
-
-            drawContext.drawTextWithShadow(
-                client.textRenderer,
-                Text.literal("V: Toggle  |  B: Next"),
-                x + 10, y + 51, 0xFFAAAAAA
+                    client.textRenderer,
+                    Text.literal("MODE: "
+                            + CineCraftClient.getCurrentMode().name()),
+                    x + 9, y + 20,
+                    0xFFFFFFFF
             );
         });
     }
