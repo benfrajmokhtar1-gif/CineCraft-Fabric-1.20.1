@@ -57,6 +57,7 @@ public class CineCraftClient implements ClientModInitializer {
                 cycleMode();
             }
         });
+                CineCraftHud.register();
     }
 
     private static void cycleMode() {
