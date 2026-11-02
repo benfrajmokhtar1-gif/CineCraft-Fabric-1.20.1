@@ -22,7 +22,33 @@ public class CineCraftClient implements ClientModInitializer {
 
     private static boolean cameraEnabled = false;
     private static CameraMode currentMode = CameraMode.SIDE;
+private static double cameraDistance = 1.0;
+private static double cameraHeight = 0.0;
+private static float cameraSmoothness = 0.18f;
 
+public static double getCameraDistance() {
+    return cameraDistance;
+}
+
+public static double getCameraHeight() {
+    return cameraHeight;
+}
+
+public static float getCameraSmoothness() {
+    return cameraSmoothness;
+}
+
+public static void setCameraDistance(double value) {
+    cameraDistance = Math.max(0.5, Math.min(2.0, value));
+}
+
+public static void setCameraHeight(double value) {
+    cameraHeight = Math.max(-3.0, Math.min(3.0, value));
+}
+
+public static void setCameraSmoothness(float value) {
+    cameraSmoothness = Math.max(0.05f, Math.min(0.5f, value));
+}
     private static KeyBinding toggleCameraKey;
     private static KeyBinding nextModeKey;
 
