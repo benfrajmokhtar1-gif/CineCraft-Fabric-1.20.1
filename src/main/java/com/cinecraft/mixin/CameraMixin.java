@@ -101,7 +101,12 @@ public abstract class CameraMixin {
             default:
                 return;
         }
+        double distance = CineCraftClient.getCameraDistance();
+        double height = CineCraftClient.getCameraHeight();
 
+        target = center.add(
+                target.subtract(center).multiply(distance)
+        ).add(0, height, 0);
         if (cineCraft$smoothPos == null
                 || cineCraft$lastEntity != entity
                 || cineCraft$lastMode != mode) {
@@ -112,7 +117,10 @@ public abstract class CameraMixin {
         cineCraft$lastMode = mode;
 
         cineCraft$smoothPos =
-                cineCraft$smoothPos.lerp(target, 0.18);
+                cineCraft$smoothPos.lerp(
+        target,
+        CineCraftClient.getCameraSmoothness()
+);
 
         Vec3d start = center;
 
