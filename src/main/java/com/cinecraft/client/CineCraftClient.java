@@ -22,35 +22,38 @@ public class CineCraftClient implements ClientModInitializer {
 
     private static boolean cameraEnabled = false;
     private static CameraMode currentMode = CameraMode.SIDE;
-private static double cameraDistance = 1.0;
-private static double cameraHeight = 0.0;
-private static float cameraSmoothness = 0.18f;
 
-public static double getCameraDistance() {
-    return cameraDistance;
-}
+    private static double cameraDistance = 1.0;
+    private static double cameraHeight = 0.0;
+    private static float cameraSmoothness = 0.18f;
 
-public static double getCameraHeight() {
-    return cameraHeight;
-}
-
-public static float getCameraSmoothness() {
-    return cameraSmoothness;
-}
-
-public static void setCameraDistance(double value) {
-    cameraDistance = Math.max(0.5, Math.min(2.0, value));
-}
-
-public static void setCameraHeight(double value) {
-    cameraHeight = Math.max(-3.0, Math.min(3.0, value));
-}
-
-public static void setCameraSmoothness(float value) {
-    cameraSmoothness = Math.max(0.05f, Math.min(0.5f, value));
-}
     private static KeyBinding toggleCameraKey;
     private static KeyBinding nextModeKey;
+    private static KeyBinding settingsKey;
+
+    public static double getCameraDistance() {
+        return cameraDistance;
+    }
+
+    public static double getCameraHeight() {
+        return cameraHeight;
+    }
+
+    public static float getCameraSmoothness() {
+        return cameraSmoothness;
+    }
+
+    public static void setCameraDistance(double value) {
+        cameraDistance = Math.max(0.5, Math.min(2.0, value));
+    }
+
+    public static void setCameraHeight(double value) {
+        cameraHeight = Math.max(-3.0, Math.min(3.0, value));
+    }
+
+    public static void setCameraSmoothness(float value) {
+        cameraSmoothness = Math.max(0.05f, Math.min(0.5f, value));
+    }
 
     @Override
     public void onInitializeClient() {
@@ -73,6 +76,15 @@ public static void setCameraSmoothness(float value) {
             )
         );
 
+        settingsKey = KeyBindingHelper.registerKeyBinding(
+            new KeyBinding(
+                "key.cinecraft.open_settings",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_N,
+                "category.cinecraft"
+            )
+        );
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
             while (toggleCameraKey.wasPressed()) {
@@ -82,8 +94,15 @@ public static void setCameraSmoothness(float value) {
             while (nextModeKey.wasPressed()) {
                 cycleMode();
             }
+
+            while (settingsKey.wasPressed()) {
+                client.setScreen(
+                    new CineCraftSettingsScreen(client.currentScreen)
+                );
+            }
         });
-                CineCraftHud.register();
+
+        CineCraftHud.register();
     }
 
     private static void cycleMode() {
