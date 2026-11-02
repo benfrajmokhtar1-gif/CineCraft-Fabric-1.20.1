@@ -101,11 +101,11 @@ public abstract class CameraMixin {
             default:
                 return;
         }
-        double distance = CineCraftClient.getCameraDistance();
+        double cameraDistance = CineCraftClient.getCameraDistance();
         double height = CineCraftClient.getCameraHeight();
 
         target = center.add(
-                target.subtract(center).multiply(distance)
+                target.subtract(center).multiply(cameraDistance)
         ).add(0, height, 0);
         if (cineCraft$smoothPos == null
                 || cineCraft$lastEntity != entity
